@@ -1,14 +1,15 @@
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
 import { ImageResponse } from "next/og";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
+// next/og (@vercel/og) فقط TTF/OTF را می‌پذیرد، نه woff2 — به همین دلیل به‌جای
+// فایل محلی public/fonts/*.woff2، نسخه‌ی TTF از CDN عمومی گرفته می‌شود.
+const FONT_URL =
+  "https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/fonts/ttf/Vazirmatn-Bold.ttf";
+
 export default async function OpengraphImage() {
-  const fontData = await readFile(
-    join(process.cwd(), "public/fonts/Vazirmatn-Bold.woff2")
-  );
+  const fontData = await fetch(FONT_URL).then((res) => res.arrayBuffer());
 
   return new ImageResponse(
     (
