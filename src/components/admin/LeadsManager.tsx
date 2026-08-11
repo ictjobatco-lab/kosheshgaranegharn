@@ -283,6 +283,7 @@ function LeadCard({
           </p>
 
           <NotesSection leadId={lead.id} notes={notes} />
+        </div>
 
         {/* تغییر وضعیت */}
         <div className="shrink-0 sm:w-44">
