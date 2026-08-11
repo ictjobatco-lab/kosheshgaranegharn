@@ -1,0 +1,24 @@
+{
+  "knowledge_base": "کوشش‌گران قرن — دانش‌نامه‌ی چت‌بات (RAG)",
+  "version": "2.0.0",
+  "language": "fa",
+  "last_updated": "1405-05-20",
+  "description": "فهرست تمام اسناد دانش‌نامه برای تزریق به سیستم RAG چت‌بات شرکت کوشش‌گران قرن. هر رکورد متادیتای یک سند است.",
+  "documents": [
+    { "id": "company-profile", "title": "شناسنامه و معرفی شرکت", "path": "01-company/company-profile.md", "format": "md", "topic": "معرفی شرکت", "audience": "عمومی" },
+    { "id": "company-facts", "title": "حقایق سریع شرکت", "path": "01-company/company-facts.yaml", "format": "yaml", "topic": "داده‌ی ساختاریافته", "audience": "چت‌بات" },
+    { "id": "team", "title": "تیم", "path": "01-company/team.md", "format": "md", "topic": "تیم", "audience": "عمومی" },
+    { "id": "services-catalog", "title": "کاتالوگ خدمات", "path": "02-services/services-catalog.json", "format": "json", "topic": "خدمات", "audience": "چت‌بات" },
+    { "id": "services-catalog-fa-csv", "title": "جدول خدمات و قیمت‌گذاری", "path": "02-services/services-catalog-fa.csv", "format": "csv", "topic": "خدمات و قیمت", "audience": "عمومی" },
+    { "id": "service-details", "title": "شرح تفصیلی خدمات", "path": "02-services/service-details.md", "format": "md", "topic": "خدمات", "audience": "عمومی" },
+    { "id": "engagement-process", "title": "فرایند همکاری", "path": "03-process/engagement-process.md", "format": "md", "topic": "فرایند", "audience": "عمومی" },
+    { "id": "onboarding-checklist", "title": "چک‌لیست شروع همکاری", "path": "03-process/client-onboarding-checklist.md", "format": "md", "topic": "فرایند", "audience": "مشتری" },
+    { "id": "faq", "title": "پرسش‌های متداول", "path": "04-support/faq.json", "format": "json", "topic": "پشتیبانی", "audience": "چت‌بات" },
+    { "id": "objection-handling", "title": "پاسخ به نگرانی‌های رایج", "path": "04-support/objection-handling.md", "format": "md", "topic": "پشتیبانی فروش", "audience": "داخلی" },
+    { "id": "contact-and-hours", "title": "تماس و ساعات کاری", "path": "04-support/contact-and-hours.txt", "format": "txt", "topic": "تماس", "audience": "عمومی" },
+    { "id": "glossary", "title": "واژه‌نامه‌ی اصطلاحات فنی", "path": "06-content/glossary.csv", "format": "csv", "topic": "واژه‌نامه", "audience": "چت‌بات" },
+    { "id": "policies", "title": "سیاست‌ها و شرایط همکاری", "path": "07-policies/policies.md", "format": "md", "topic": "سیاست‌ها", "audience": "عمومی" },
+    { "id": "testimonials", "title": "نظرات مشتریان", "path": "05-proof/testimonials.json", "format": "json", "topic": "اعتبار", "audience": "چت‌بات" }
+  ],
+  "excluded_note": "اسناد فاز قبلی (متدولوژی چهار رکن، بسته‌های قیمت قدیمی، مطالعات موردی، مقالات وبلاگ، بروشور) عمداً از این فهرست حذف شدند چون یا مخصوص برند قبلی بودند یا شامل ادعا/نمونه‌ی ساختگی می‌شدند. testimonials.json فقط با نظر واقعی جایگزین شد. هروقت محتوای واقعی بیشتری (نمونه‌کار واقعی و...) آماده شد، به همین فهرست اضافه می‌شود."
+}
