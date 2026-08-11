@@ -66,3 +66,30 @@ export async function updateLeadStatus(
   revalidatePath("/admin");
   return { ok: true };
 }
+
+/** افزودن یک یادداشت کوتاه به تاریخچه‌ی پیگیری یک لید. */
+export async function addLeadNoteAction(
+  leadId: string,
+  note: string
+): Promise<{ ok: boolean; error?: string }> {
+  if (!isAuthed()) {
+    return { ok: false, error: "دسترسی غیرمجاز." };
+  }
+  const trimmed = note.trim();
+  if (!trimmed) {
+    return { ok: false, error: "متن یادداشت خالی است." };
+  }
+
+  const supabase = getSupabaseAdmin();
+  if (!supabase) {
+    return { ok: false, error: "اتصال پایگاه داده برقرار نیست." };
+  }
+
+  const { error } = await supabase.from("lead_notes").insert({ lead_id: leadId, note: trimmed });
+  if (error) {
+    return { ok: false, error: error.message };
+  }
+
+  revalidatePath("/admin/leads");
+  return { ok: true };
+}

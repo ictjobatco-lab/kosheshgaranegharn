@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { updateLeadStatus, type LeadStatus } from "@/app/admin/actions";
+import { updateLeadStatus, addLeadNoteAction, type LeadStatus } from "@/app/admin/actions";
 import { toFa } from "@/lib/utils";
 
 export type Lead = {
@@ -18,6 +18,13 @@ export type Lead = {
   preferred_time: string | null;
   status: LeadStatus;
   source?: string | null;
+};
+
+export type LeadNote = {
+  id: string;
+  lead_id: string;
+  note: string;
+  created_at: string;
 };
 
 function exportCsv(leads: Lead[]) {
@@ -62,9 +69,11 @@ function formatDate(iso: string): string {
 
 export default function LeadsManager({
   leads,
+  notesByLead,
   error,
 }: {
   leads: Lead[];
+  notesByLead: Record<string, LeadNote[]>;
   error: string | null;
 }) {
   const router = useRouter();
@@ -167,6 +176,7 @@ export default function LeadsManager({
                   <LeadCard
                     key={lead.id}
                     lead={lead}
+                    notes={notesByLead[lead.id] ?? []}
                     pending={pendingId === lead.id}
                     onStatusChange={changeStatus}
                   />
@@ -205,10 +215,12 @@ function FilterChip({
 
 function LeadCard({
   lead,
+  notes,
   pending,
   onStatusChange,
 }: {
   lead: Lead;
+  notes: LeadNote[];
   pending: boolean;
   onStatusChange: (id: string, status: LeadStatus) => void;
 }) {
@@ -269,7 +281,8 @@ function LeadCard({
           <p className="mt-3 text-caption text-slate">
             ثبت شده در {formatDate(lead.created_at)}
           </p>
-        </div>
+
+          <NotesSection leadId={lead.id} notes={notes} />
 
         {/* تغییر وضعیت */}
         <div className="shrink-0 sm:w-44">
@@ -298,6 +311,75 @@ function LeadCard({
         </div>
       </div>
     </article>
+  );
+}
+
+function NotesSection({ leadId, notes }: { leadId: string; notes: LeadNote[] }) {
+  const router = useRouter();
+  const [text, setText] = useState("");
+  const [pending, start] = useTransition();
+  const [err, setErr] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState(false);
+
+  function submit() {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+    setErr(null);
+    start(async () => {
+      const res = await addLeadNoteAction(leadId, trimmed);
+      if (res.ok) {
+        setText("");
+        router.refresh();
+      } else {
+        setErr(res.error ?? "ثبت یادداشت ناموفق بود.");
+      }
+    });
+  }
+
+  return (
+    <div className="mt-4 border-t border-sand pt-3">
+      <button
+        type="button"
+        onClick={() => setExpanded((v) => !v)}
+        className="flex items-center gap-1.5 text-caption font-medium text-slate hover:text-brass"
+      >
+        یادداشت‌های پیگیری ({toFa(notes.length)}) {expanded ? "▲" : "▼"}
+      </button>
+
+      {expanded && (
+        <div className="mt-3 space-y-3">
+          {notes.length > 0 && (
+            <ul className="space-y-2">
+              {notes.map((n) => (
+                <li key={n.id} className="rounded-btn bg-bone/60 px-3 py-2 text-[0.85rem] leading-6 text-ink">
+                  <p className="whitespace-pre-wrap">{n.note}</p>
+                  <p className="mt-1 text-[0.7rem] text-slate">{formatDate(n.created_at)}</p>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
+            <textarea
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              rows={2}
+              placeholder="مثلاً: تماس گرفته شد، قرار جلسه‌ی هفته‌ی بعد گذاشته شد…"
+              className="w-full min-h-[44px] flex-1 resize-y rounded-btn border border-sand bg-bone px-3 py-2 text-[0.9rem] leading-6 text-ink placeholder:text-slate/60 focus:border-brass focus:outline-none"
+            />
+            <button
+              type="button"
+              disabled={pending || !text.trim()}
+              onClick={submit}
+              className="shrink-0 rounded-btn bg-brass px-4 py-2 text-caption font-medium text-white transition-colors hover:bg-brass-dark disabled:opacity-60"
+            >
+              {pending ? "در حال ثبت…" : "افزودن یادداشت"}
+            </button>
+          </div>
+          {err && <p className="text-[0.75rem] text-red-400">{err}</p>}
+        </div>
+      )}
+    </div>
   );
 }
 
