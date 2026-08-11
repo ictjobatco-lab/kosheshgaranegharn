@@ -12,12 +12,12 @@ export default function Dashboard({ data, error }: { data: Analytics | null; err
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-heading text-h3 font-bold text-pine">داشبورد</h1>
+        <h1 className="font-heading text-h3 font-bold text-ink">داشبورد</h1>
         <p className="mt-1 text-caption text-slate">نمای کلی عملکرد چت‌بات در همه‌ی کانال‌ها.</p>
       </div>
 
       {error || !data ? (
-        <div className="rounded-card border border-red-200 bg-red-50 px-5 py-4 text-body text-red-700">
+        <div className="rounded-card border border-red-500/30 bg-red-500/10 px-5 py-4 text-body text-red-300">
           {error ?? "داده‌ای در دسترس نیست."}
         </div>
       ) : (
@@ -35,8 +35,8 @@ export default function Dashboard({ data, error }: { data: Analytics | null; err
           </div>
 
           {/* تفکیک کانال */}
-          <section className="rounded-card border border-sand bg-white p-6 shadow-soft">
-            <h2 className="mb-4 font-heading text-body font-semibold text-pine">گفتگوها به تفکیک کانال</h2>
+          <section className="rounded-card border border-sand bg-pine p-6 shadow-soft">
+            <h2 className="mb-4 font-heading text-body font-semibold text-ink">گفتگوها به تفکیک کانال</h2>
             {data.byChannel.length === 0 ? (
               <p className="text-caption text-slate">هنوز گفتگویی ثبت نشده است.</p>
             ) : (
@@ -48,7 +48,7 @@ export default function Dashboard({ data, error }: { data: Analytics | null; err
                     <div key={c.channel} className="flex items-center gap-3">
                       <span className="w-24 shrink-0 text-[0.9rem] text-ink">{channelLabel(c.channel)}</span>
                       <div className="h-3 flex-1 overflow-hidden rounded-full bg-sand">
-                        <div className="h-full rounded-full bg-pine" style={{ width: `${pct}%` }} />
+                        <div className="h-full rounded-full bg-brass" style={{ width: `${pct}%` }} />
                       </div>
                       <span className="nums w-12 shrink-0 text-left text-caption text-slate">{faNum(c.conversations)}</span>
                     </div>
@@ -59,9 +59,9 @@ export default function Dashboard({ data, error }: { data: Analytics | null; err
           </section>
 
           {/* مصرف توکن و هزینه به تفکیک مدل */}
-          <section className="rounded-card border border-sand bg-white p-6 shadow-soft">
+          <section className="rounded-card border border-sand bg-pine p-6 shadow-soft">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-heading text-body font-semibold text-pine">مصرف توکن و هزینه به‌تفکیک مدل</h2>
+              <h2 className="font-heading text-body font-semibold text-ink">مصرف توکن و هزینه به‌تفکیک مدل</h2>
               <span className="text-[0.75rem] text-slate">هزینه تخمینی است</span>
             </div>
             {data.models.length === 0 ? (
@@ -81,7 +81,7 @@ export default function Dashboard({ data, error }: { data: Analytics | null; err
                   <tbody>
                     {data.models.map((m) => (
                       <tr key={m.model} className="border-b border-sand/60">
-                        <td dir="ltr" className="py-2.5 text-right text-pine">{m.model}</td>
+                        <td dir="ltr" className="py-2.5 text-right text-ink">{m.model}</td>
                         <td className="nums py-2.5">{faNum(m.messages)}</td>
                         <td className="nums py-2.5">{faNum(m.tokensIn)}</td>
                         <td className="nums py-2.5">{faNum(m.tokensOut)}</td>
@@ -108,9 +108,9 @@ export default function Dashboard({ data, error }: { data: Analytics | null; err
 
 function Stat({ label, value, hint }: { label: string; value: string; hint?: string }) {
   return (
-    <div className="rounded-card border border-sand bg-white p-5 shadow-soft">
+    <div className="rounded-card border border-sand bg-pine p-5 shadow-soft">
       <p className="text-caption text-slate">{label}</p>
-      <p className="nums mt-1 font-heading text-[1.6rem] font-bold leading-tight text-pine">{value}</p>
+      <p className="nums mt-1 font-heading text-[1.6rem] font-bold leading-tight text-ink">{value}</p>
       {hint && <p className="mt-1 text-[0.75rem] text-slate">{hint}</p>}
     </div>
   );

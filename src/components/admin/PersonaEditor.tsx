@@ -56,21 +56,21 @@ export default function PersonaEditor({
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-heading text-h3 font-bold text-pine">پرسونا و System Prompt</h1>
+        <h1 className="font-heading text-h3 font-bold text-ink">پرسونا و System Prompt</h1>
         <p className="mt-1 text-caption text-slate">
           لحن و رفتار چت‌بات از اینجا کنترل می‌شود. هر ذخیره یک «نسخه‌ی جدید» می‌سازد و آن را فعال می‌کند؛ می‌توانید به نسخه‌های قبلی برگردید.
         </p>
       </div>
 
-      {error && <div className="rounded-card border border-red-200 bg-red-50 px-5 py-4 text-body text-red-700">{error}</div>}
+      {error && <div className="rounded-card border border-red-500/30 bg-red-500/10 px-5 py-4 text-body text-red-300">{error}</div>}
 
-      <section className="rounded-card border border-sand bg-white p-6 shadow-soft">
+      <section className="rounded-card border border-sand bg-pine p-6 shadow-soft">
         <div className="mb-4">
           <label className="mb-1.5 block text-caption font-medium text-ink">برچسب پرسونا</label>
           <input
             value={persona}
             onChange={(e) => setPersona(e.target.value)}
-            className="w-full min-h-[44px] rounded-btn border border-slate/30 bg-white px-3.5 py-2.5 text-[0.95rem] text-ink focus:border-brass focus:outline-none"
+            className="w-full min-h-[44px] rounded-btn border border-sand bg-bone px-3.5 py-2.5 text-[0.95rem] text-ink focus:border-brass focus:outline-none"
             placeholder="مثلاً: دستیار کوشش‌گران قرن"
           />
         </div>
@@ -81,7 +81,7 @@ export default function PersonaEditor({
             onChange={(e) => setContent(e.target.value)}
             rows={16}
             dir="rtl"
-            className="w-full rounded-btn border border-slate/30 bg-white px-3.5 py-3 text-[0.9rem] leading-8 text-ink focus:border-brass focus:outline-none"
+            className="w-full rounded-btn border border-sand bg-bone px-3.5 py-3 text-[0.9rem] leading-8 text-ink focus:border-brass focus:outline-none"
           />
         </div>
         <div className="mt-5 flex items-center gap-3">
@@ -89,7 +89,7 @@ export default function PersonaEditor({
             type="button"
             disabled={pending || content.trim().length < 20}
             onClick={save}
-            className="inline-flex min-h-[44px] items-center justify-center rounded-btn bg-pine px-6 py-2.5 text-[0.95rem] font-medium text-bone transition-colors hover:bg-pine-dark disabled:opacity-60"
+            className="inline-flex min-h-[44px] items-center justify-center rounded-btn bg-brass px-6 py-2.5 text-[0.95rem] font-medium text-white transition-colors hover:bg-brass-dark disabled:opacity-60"
           >
             {pending ? "در حال ذخیره…" : "ذخیره به‌عنوان نسخه‌ی فعال"}
           </button>
@@ -100,25 +100,25 @@ export default function PersonaEditor({
           >
             بازگردانی به پیش‌فرض
           </button>
-          {msg && <span className={`text-caption ${msg.ok ? "text-green-700" : "text-red-600"}`}>{msg.text}</span>}
+          {msg && <span className={`text-caption ${msg.ok ? "text-green-400" : "text-red-400"}`}>{msg.text}</span>}
         </div>
       </section>
 
       <section>
-        <h2 className="mb-3 font-heading text-body font-semibold text-pine">نسخه‌ها</h2>
+        <h2 className="mb-3 font-heading text-body font-semibold text-ink">نسخه‌ها</h2>
         {versions.length === 0 ? (
-          <p className="rounded-card border border-dashed border-sand bg-white px-5 py-10 text-center text-slate">
+          <p className="rounded-card border border-dashed border-sand bg-pine px-5 py-10 text-center text-slate">
             هنوز نسخه‌ای ذخیره نشده؛ پیش‌فرض داخلی استفاده می‌شود.
           </p>
         ) : (
           <div className="space-y-3">
             {versions.map((v) => (
-              <div key={v.id} className="rounded-card border border-sand bg-white p-4 shadow-soft">
+              <div key={v.id} className="rounded-card border border-sand bg-pine p-4 shadow-soft">
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
                     <span className="font-medium text-ink">{v.persona || "بدون برچسب"}</span>
                     {v.is_active && (
-                      <span className="rounded-full bg-green-100 px-2 py-0.5 text-[0.75rem] text-green-700">فعال</span>
+                      <span className="rounded-full bg-green-500/15 px-2 py-0.5 text-[0.75rem] text-green-300">فعال</span>
                     )}
                     <span className="text-[0.75rem] text-slate">{fmt(v.created_at)}</span>
                   </div>
@@ -127,7 +127,7 @@ export default function PersonaEditor({
                       type="button"
                       disabled={pending}
                       onClick={() => activate(v.id)}
-                      className="rounded-btn border border-pine/25 px-3 py-1.5 text-caption text-pine transition-colors hover:bg-pine/5 disabled:opacity-50"
+                      className="rounded-btn border border-sand px-3 py-1.5 text-caption text-ink transition-colors hover:border-brass hover:bg-white/5 disabled:opacity-50"
                     >
                       فعال‌سازی
                     </button>

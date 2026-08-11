@@ -34,16 +34,16 @@ function exportCsv(leads: Lead[]) {
   const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
   const a = document.createElement("a");
   a.href = url;
-  a.download = `arkan-leads-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.download = `koshesh-garan-gharn-leads-${new Date().toISOString().slice(0, 10)}.csv`;
   a.click();
   URL.revokeObjectURL(url);
 }
 
 const STATUS_META: Record<LeadStatus, { label: string; className: string }> = {
-  new: { label: "جدید", className: "bg-brass/15 text-brass-dark" },
-  contacted: { label: "تماس گرفته شد", className: "bg-pine/10 text-pine" },
-  scheduled: { label: "جلسه تنظیم شد", className: "bg-blue-100 text-blue-700" },
-  won: { label: "موفق", className: "bg-green-100 text-green-700" },
+  new: { label: "جدید", className: "bg-brass/15 text-brass" },
+  contacted: { label: "تماس گرفته شد", className: "bg-white/10 text-ink" },
+  scheduled: { label: "جلسه تنظیم شد", className: "bg-blue-500/15 text-blue-300" },
+  won: { label: "موفق", className: "bg-green-500/15 text-green-300" },
   lost: { label: "منصرف", className: "bg-slate/15 text-slate" },
 };
 
@@ -105,7 +105,7 @@ export default function LeadsManager({
     <>
       <div className="mb-6 flex items-start justify-between gap-4">
         <div>
-          <h1 className="font-heading text-h3 font-bold text-pine">
+          <h1 className="font-heading text-h3 font-bold text-ink">
             درخواست‌های مشاوره
           </h1>
           <p className="mt-1 text-caption text-slate">
@@ -116,7 +116,7 @@ export default function LeadsManager({
           <button
             type="button"
             onClick={() => exportCsv(filtered)}
-            className="shrink-0 rounded-btn border border-pine/25 px-4 py-2 text-caption text-pine transition-colors hover:bg-pine/5"
+            className="shrink-0 rounded-btn border border-sand px-4 py-2 text-caption text-ink transition-colors hover:border-brass hover:bg-white/5"
           >
             خروجی CSV
           </button>
@@ -124,7 +124,7 @@ export default function LeadsManager({
       </div>
 
         {error ? (
-          <div className="rounded-card border border-red-200 bg-red-50 px-5 py-4 text-body text-red-700">
+          <div className="rounded-card border border-red-500/30 bg-red-500/10 px-5 py-4 text-body text-red-300">
             {error}
           </div>
         ) : (
@@ -136,7 +136,7 @@ export default function LeadsManager({
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="جستجو در نام، تلفن، کسب‌وکار یا چالش…"
-                className="w-full min-h-[44px] rounded-btn border border-slate/30 bg-white px-4 py-2.5 text-[0.95rem] text-ink transition-colors placeholder:text-slate/60 focus:border-brass focus:outline-none sm:max-w-sm"
+                className="w-full min-h-[44px] rounded-btn border border-sand bg-pine px-4 py-2.5 text-[0.95rem] text-ink transition-colors placeholder:text-slate/60 focus:border-brass focus:outline-none sm:max-w-sm"
               />
               <div className="flex flex-wrap gap-2">
                 <FilterChip
@@ -156,7 +156,7 @@ export default function LeadsManager({
             </div>
 
             {filtered.length === 0 ? (
-              <div className="rounded-card border border-dashed border-sand bg-white px-5 py-16 text-center text-slate">
+              <div className="rounded-card border border-dashed border-sand bg-pine px-5 py-16 text-center text-slate">
                 {leads.length === 0
                   ? "هنوز درخواستی ثبت نشده است."
                   : "نتیجه‌ای برای این جستجو/فیلتر یافت نشد."}
@@ -194,8 +194,8 @@ function FilterChip({
       onClick={onClick}
       className={`rounded-full px-3.5 py-1.5 text-caption transition-colors ${
         active
-          ? "bg-pine text-bone"
-          : "border border-sand bg-white text-slate hover:border-pine/30"
+          ? "bg-brass text-white"
+          : "border border-sand bg-pine text-slate hover:border-brass/50"
       }`}
     >
       {label}
@@ -213,12 +213,12 @@ function LeadCard({
   onStatusChange: (id: string, status: LeadStatus) => void;
 }) {
   return (
-    <article className="rounded-card border border-sand bg-white p-5 shadow-soft sm:p-6">
+    <article className="rounded-card border border-sand bg-pine p-5 shadow-soft sm:p-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         {/* اطلاعات اصلی */}
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <h2 className="font-heading text-h3 font-semibold text-pine">
+            <h2 className="font-heading text-h3 font-semibold text-ink">
               {lead.full_name}
             </h2>
             <span
@@ -237,7 +237,7 @@ function LeadCard({
                 <a
                   href={`tel:${lead.phone}`}
                   dir="ltr"
-                  className="text-pine underline-offset-2 hover:underline"
+                  className="text-brass underline-offset-2 hover:underline"
                 >
                   {lead.phone}
                 </a>
@@ -250,7 +250,7 @@ function LeadCard({
                   <a
                     href={`mailto:${lead.email}`}
                     dir="ltr"
-                    className="text-pine underline-offset-2 hover:underline"
+                    className="text-brass underline-offset-2 hover:underline"
                   >
                     {lead.email}
                   </a>
@@ -281,7 +281,7 @@ function LeadCard({
               value={lead.status}
               disabled={pending}
               onChange={(e) => onStatusChange(lead.id, e.target.value as LeadStatus)}
-              className="w-full min-h-[44px] cursor-pointer appearance-none rounded-btn border border-slate/30 bg-white px-3.5 py-2.5 text-[0.95rem] text-ink transition-colors focus:border-brass focus:outline-none disabled:opacity-60"
+              className="w-full min-h-[44px] cursor-pointer appearance-none rounded-btn border border-sand bg-bone px-3.5 py-2.5 text-[0.95rem] text-ink transition-colors focus:border-brass focus:outline-none disabled:opacity-60"
             >
               {STATUS_ORDER.map((s) => (
                 <option key={s} value={s}>
@@ -291,7 +291,7 @@ function LeadCard({
             </select>
             {pending && (
               <span className="absolute left-3 top-1/2 -translate-y-1/2">
-                <span className="block h-4 w-4 animate-spin rounded-full border-2 border-slate/30 border-t-pine" />
+                <span className="block h-4 w-4 animate-spin rounded-full border-2 border-slate/30 border-t-brass" />
               </span>
             )}
           </div>

@@ -6,7 +6,7 @@ import { saveWidgetConfigAction } from "@/app/admin/chatbot-actions";
 
 const labelCls = "mb-1.5 block text-caption font-medium text-ink";
 const inputCls =
-  "w-full min-h-[44px] rounded-btn border border-slate/30 bg-white px-3.5 py-2.5 text-[0.95rem] text-ink focus:border-brass focus:outline-none";
+  "w-full min-h-[44px] rounded-btn border border-sand bg-bone px-3.5 py-2.5 text-[0.95rem] text-ink focus:border-brass focus:outline-none";
 
 export default function WidgetSettings({ config, siteUrl }: { config: WidgetConfig; siteUrl: string }) {
   const [enabled, setEnabled] = useState(config.enabled);
@@ -44,15 +44,15 @@ export default function WidgetSettings({ config, siteUrl }: { config: WidgetConf
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-heading text-h3 font-bold text-pine">ویجت قابل‌جاسازی</h1>
+        <h1 className="font-heading text-h3 font-bold text-ink">ویجت قابل‌جاسازی</h1>
         <p className="mt-1 text-caption text-slate">
           حباب چت کوشش‌گران قرن را روی هر سایتی نصب کنید. ظاهر، پیام خوش‌آمد و دامنه‌های مجاز از همین‌جا کنترل می‌شوند.
         </p>
       </div>
 
       {/* اسنیپت نصب */}
-      <section className="rounded-card border border-sand bg-white p-6 shadow-soft">
-        <h2 className="mb-3 font-heading text-body font-semibold text-pine">کد نصب</h2>
+      <section className="rounded-card border border-sand bg-pine p-6 shadow-soft">
+        <h2 className="mb-3 font-heading text-body font-semibold text-ink">کد نصب</h2>
         <p className="mb-3 text-caption text-slate">این کد را درست قبل از بسته‌شدن تگ <code>&lt;/body&gt;</code> سایت مقصد بگذارید:</p>
         <div className="flex items-center gap-2">
           <code dir="ltr" className="flex-1 overflow-x-auto rounded-btn bg-bone px-4 py-3 text-[0.85rem] text-ink">
@@ -65,7 +65,7 @@ export default function WidgetSettings({ config, siteUrl }: { config: WidgetConf
               setCopied(true);
               setTimeout(() => setCopied(false), 1500);
             }}
-            className="shrink-0 rounded-btn border border-pine/25 px-4 py-2.5 text-caption text-pine transition-colors hover:bg-pine/5"
+            className="shrink-0 rounded-btn border border-sand px-4 py-2.5 text-caption text-ink transition-colors hover:border-brass hover:bg-white/5"
           >
             {copied ? "کپی شد ✓" : "کپی"}
           </button>
@@ -79,11 +79,11 @@ export default function WidgetSettings({ config, siteUrl }: { config: WidgetConf
       </section>
 
       {/* تنظیمات */}
-      <section className="rounded-card border border-sand bg-white p-6 shadow-soft">
-        <h2 className="mb-4 font-heading text-body font-semibold text-pine">ظاهر و رفتار</h2>
+      <section className="rounded-card border border-sand bg-pine p-6 shadow-soft">
+        <h2 className="mb-4 font-heading text-body font-semibold text-ink">ظاهر و رفتار</h2>
 
         <label className="mb-5 flex items-center gap-3">
-          <input type="checkbox" checked={enabled} onChange={(e) => setEnabled(e.target.checked)} className="h-5 w-5 accent-pine" />
+          <input type="checkbox" checked={enabled} onChange={(e) => setEnabled(e.target.checked)} className="h-5 w-5 accent-brass" />
           <span className="text-[0.95rem] text-ink">ویجت فعال باشد</span>
         </label>
 
@@ -91,7 +91,7 @@ export default function WidgetSettings({ config, siteUrl }: { config: WidgetConf
           <div>
             <label className={labelCls}>رنگ اصلی</label>
             <div className="flex items-center gap-2">
-              <input type="color" value={color} onChange={(e) => setColor(e.target.value)} className="h-11 w-14 cursor-pointer rounded-btn border border-slate/30" />
+              <input type="color" value={color} onChange={(e) => setColor(e.target.value)} className="h-11 w-14 cursor-pointer rounded-btn border border-sand" />
               <input value={color} onChange={(e) => setColor(e.target.value)} dir="ltr" className={inputCls} />
             </div>
           </div>
@@ -129,11 +129,11 @@ export default function WidgetSettings({ config, siteUrl }: { config: WidgetConf
             type="button"
             disabled={pending}
             onClick={save}
-            className="inline-flex min-h-[44px] items-center justify-center rounded-btn bg-pine px-6 py-2.5 text-[0.95rem] font-medium text-bone transition-colors hover:bg-pine-dark disabled:opacity-60"
+            className="inline-flex min-h-[44px] items-center justify-center rounded-btn bg-brass px-6 py-2.5 text-[0.95rem] font-medium text-white transition-colors hover:bg-brass-dark disabled:opacity-60"
           >
             {pending ? "در حال ذخیره…" : "ذخیره‌ی تنظیمات ویجت"}
           </button>
-          {msg && <span className={`text-caption ${msg.ok ? "text-green-700" : "text-red-600"}`}>{msg.text}</span>}
+          {msg && <span className={`text-caption ${msg.ok ? "text-green-400" : "text-red-400"}`}>{msg.text}</span>}
         </div>
       </section>
     </div>

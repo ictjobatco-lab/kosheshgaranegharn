@@ -40,7 +40,7 @@ export default function AdminShell({
             <form action={logout}>
               <button
                 type="submit"
-                className="rounded-btn border border-pine/25 px-4 py-2 text-caption text-pine transition-colors hover:bg-pine/5"
+                className="rounded-btn border border-sand px-4 py-2 text-caption text-ink transition-colors hover:border-brass hover:bg-white/5"
               >
                 خروج
               </button>
@@ -55,8 +55,8 @@ export default function AdminShell({
                 className={cn(
                   "whitespace-nowrap border-b-2 px-4 py-3 text-[0.95rem] transition-colors",
                   t.key === active
-                    ? "border-brass font-medium text-pine"
-                    : "border-transparent text-slate hover:text-pine"
+                    ? "border-brass font-medium text-ink"
+                    : "border-transparent text-slate hover:text-brass"
                 )}
                 aria-current={t.key === active ? "page" : undefined}
               >

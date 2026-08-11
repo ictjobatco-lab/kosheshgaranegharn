@@ -24,18 +24,18 @@ export default async function FeedbackPage() {
     <AdminShell active="feedback">
       <div className="space-y-8">
         <div>
-          <h1 className="font-heading text-h3 font-bold text-pine">بازخورد و سؤالات بی‌جواب</h1>
+          <h1 className="font-heading text-h3 font-bold text-ink">بازخورد و سؤالات بی‌جواب</h1>
           <p className="mt-1 text-caption text-slate">
             جایی برای بهبود چت‌بات: پاسخ‌هایی که کاربر نپسندیده و سؤالاتی که پاسخ‌شان در پایگاه دانش نبود.
           </p>
         </div>
 
         {!data ? (
-          <div className="rounded-card border border-red-200 bg-red-50 px-5 py-4 text-body text-red-700">داده‌ای در دسترس نیست.</div>
+          <div className="rounded-card border border-red-500/30 bg-red-500/10 px-5 py-4 text-body text-red-300">داده‌ای در دسترس نیست.</div>
         ) : (
           <>
             <section>
-              <h2 className="mb-3 font-heading text-body font-semibold text-pine">
+              <h2 className="mb-3 font-heading text-body font-semibold text-ink">
                 بازخوردهای منفی 👎 ({toFa(data.downFeedback.length)})
               </h2>
               {data.downFeedback.length === 0 ? (
@@ -43,7 +43,7 @@ export default async function FeedbackPage() {
               ) : (
                 <div className="space-y-2">
                   {data.downFeedback.map((d, i) => (
-                    <div key={i} className="rounded-card border border-sand bg-white p-4 shadow-soft">
+                    <div key={i} className="rounded-card border border-sand bg-pine p-4 shadow-soft">
                       <p className="text-[0.9rem] leading-7 text-ink">{d.answer}…</p>
                       <p className="mt-1.5 text-[0.75rem] text-slate">{fmt(d.when)}</p>
                     </div>
@@ -53,7 +53,7 @@ export default async function FeedbackPage() {
             </section>
 
             <section>
-              <h2 className="mb-1 font-heading text-body font-semibold text-pine">
+              <h2 className="mb-1 font-heading text-body font-semibold text-ink">
                 سؤالات بی‌جواب ({toFa(data.gapQuestions.length)})
               </h2>
               <p className="mb-3 text-caption text-slate">
@@ -64,7 +64,7 @@ export default async function FeedbackPage() {
               ) : (
                 <div className="space-y-2">
                   {data.gapQuestions.map((g, i) => (
-                    <div key={i} className="flex items-center justify-between gap-3 rounded-card border border-sand bg-white p-4 shadow-soft">
+                    <div key={i} className="flex items-center justify-between gap-3 rounded-card border border-sand bg-pine p-4 shadow-soft">
                       <p className="text-[0.9rem] text-ink">{g.question}</p>
                       <span className="shrink-0 text-[0.75rem] text-slate">{fmt(g.when)}</span>
                     </div>
@@ -81,6 +81,6 @@ export default async function FeedbackPage() {
 
 function Empty({ children }: { children: React.ReactNode }) {
   return (
-    <div className="rounded-card border border-dashed border-sand bg-white px-5 py-10 text-center text-slate">{children}</div>
+    <div className="rounded-card border border-dashed border-sand bg-pine px-5 py-10 text-center text-slate">{children}</div>
   );
 }

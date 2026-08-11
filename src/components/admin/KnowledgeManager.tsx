@@ -29,9 +29,9 @@ const FILE_ACCEPT = ".md,.markdown,.txt,.csv,.json,.yaml,.yml,.html,.htm,.pdf";
 
 const STATUS_META: Record<string, { label: string; cls: string }> = {
   pending: { label: "در صف", cls: "bg-sand text-slate" },
-  processing: { label: "در حال پردازش", cls: "bg-brass/15 text-brass-dark" },
-  ready: { label: "آماده", cls: "bg-green-100 text-green-700" },
-  error: { label: "خطا", cls: "bg-red-100 text-red-700" },
+  processing: { label: "در حال پردازش", cls: "bg-brass/15 text-brass" },
+  ready: { label: "آماده", cls: "bg-green-500/15 text-green-300" },
+  error: { label: "خطا", cls: "bg-red-500/15 text-red-300" },
 };
 
 type Tab = "text" | "url" | "file";
@@ -53,21 +53,21 @@ export default function KnowledgeManager({ docs, error }: { docs: DocRow[]; erro
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-heading text-h3 font-bold text-pine">پایگاه دانش</h1>
+        <h1 className="font-heading text-h3 font-bold text-ink">پایگاه دانش</h1>
         <p className="mt-1 text-caption text-slate">
           منابعی که چت‌بات بر پایه‌ی آن‌ها پاسخ می‌دهد. مجموعاً {toFa(docs.length)} سند.
         </p>
       </div>
 
       {error && (
-        <div className="rounded-card border border-red-200 bg-red-50 px-5 py-4 text-body text-red-700">
+        <div className="rounded-card border border-red-500/30 bg-red-500/10 px-5 py-4 text-body text-red-300">
           {error}
         </div>
       )}
 
       {/* افزودن منبع */}
-      <section className="rounded-card border border-sand bg-white p-6 shadow-soft">
-        <h2 className="mb-4 font-heading text-body font-semibold text-pine">افزودن منبع جدید</h2>
+      <section className="rounded-card border border-sand bg-pine p-6 shadow-soft">
+        <h2 className="mb-4 font-heading text-body font-semibold text-ink">افزودن منبع جدید</h2>
         <div className="mb-5 flex gap-1 border-b border-sand">
           {([["text", "متن"], ["url", "آدرس وب"], ["file", "فایل"]] as [Tab, string][]).map(
             ([k, label]) => (
@@ -76,7 +76,7 @@ export default function KnowledgeManager({ docs, error }: { docs: DocRow[]; erro
                 type="button"
                 onClick={() => setTab(k)}
                 className={`-mb-px border-b-2 px-4 py-2 text-[0.95rem] transition-colors ${
-                  tab === k ? "border-brass font-medium text-pine" : "border-transparent text-slate hover:text-pine"
+                  tab === k ? "border-brass font-medium text-ink" : "border-transparent text-slate hover:text-brass"
                 }`}
               >
                 {label}
@@ -88,7 +88,7 @@ export default function KnowledgeManager({ docs, error }: { docs: DocRow[]; erro
         {msg && (
           <div
             className={`mb-4 rounded-btn px-4 py-2.5 text-caption ${
-              msg.ok ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"
+              msg.ok ? "bg-green-500/10 text-green-300" : "bg-red-500/10 text-red-300"
             }`}
           >
             {msg.text}
@@ -105,9 +105,9 @@ export default function KnowledgeManager({ docs, error }: { docs: DocRow[]; erro
 
       {/* لیست اسناد */}
       <section>
-        <h2 className="mb-3 font-heading text-body font-semibold text-pine">اسناد</h2>
+        <h2 className="mb-3 font-heading text-body font-semibold text-ink">اسناد</h2>
         {docs.length === 0 ? (
-          <div className="rounded-card border border-dashed border-sand bg-white px-5 py-12 text-center text-slate">
+          <div className="rounded-card border border-dashed border-sand bg-pine px-5 py-12 text-center text-slate">
             هنوز سندی اضافه نشده است.
           </div>
         ) : (
@@ -117,7 +117,7 @@ export default function KnowledgeManager({ docs, error }: { docs: DocRow[]; erro
               return (
                 <div
                   key={d.id}
-                  className="flex flex-col gap-3 rounded-card border border-sand bg-white p-4 shadow-soft sm:flex-row sm:items-center sm:justify-between"
+                  className="flex flex-col gap-3 rounded-card border border-sand bg-pine p-4 shadow-soft sm:flex-row sm:items-center sm:justify-between"
                 >
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
@@ -130,20 +130,20 @@ export default function KnowledgeManager({ docs, error }: { docs: DocRow[]; erro
                     {d.tags && d.tags.length > 0 && (
                       <div className="mt-1.5 flex flex-wrap gap-1.5">
                         {d.tags.map((t) => (
-                          <span key={t} className="rounded-full bg-sand px-2 py-0.5 text-[0.7rem] text-pine">
+                          <span key={t} className="rounded-full bg-sand px-2 py-0.5 text-[0.7rem] text-brass">
                             {t}
                           </span>
                         ))}
                       </div>
                     )}
-                    {d.error && <p className="mt-1 text-[0.8rem] text-red-600">{d.error}</p>}
+                    {d.error && <p className="mt-1 text-[0.8rem] text-red-400">{d.error}</p>}
                   </div>
                   <div className="flex shrink-0 gap-2">
                     <button
                       type="button"
                       disabled={pending}
                       onClick={() => run(reindexDocAction(d.id))}
-                      className="rounded-btn border border-pine/25 px-3 py-1.5 text-caption text-pine transition-colors hover:bg-pine/5 disabled:opacity-50"
+                      className="rounded-btn border border-sand px-3 py-1.5 text-caption text-ink transition-colors hover:border-brass hover:bg-white/5 disabled:opacity-50"
                     >
                       بازسازی
                     </button>
@@ -153,7 +153,7 @@ export default function KnowledgeManager({ docs, error }: { docs: DocRow[]; erro
                       onClick={() => {
                         if (confirm(`حذف سند «${d.title}»؟`)) run(deleteDocAction(d.id));
                       }}
-                      className="rounded-btn border border-red-200 px-3 py-1.5 text-caption text-red-600 transition-colors hover:bg-red-50 disabled:opacity-50"
+                      className="rounded-btn border border-red-500/30 px-3 py-1.5 text-caption text-red-400 transition-colors hover:bg-red-500/10 disabled:opacity-50"
                     >
                       حذف
                     </button>
@@ -169,10 +169,10 @@ export default function KnowledgeManager({ docs, error }: { docs: DocRow[]; erro
 }
 
 const inputCls =
-  "w-full min-h-[44px] rounded-btn border border-slate/30 bg-white px-3.5 py-2.5 text-[0.95rem] text-ink transition-colors placeholder:text-slate/60 focus:border-brass focus:outline-none";
+  "w-full min-h-[44px] rounded-btn border border-sand bg-bone px-3.5 py-2.5 text-[0.95rem] text-ink transition-colors placeholder:text-slate/60 focus:border-brass focus:outline-none";
 const labelCls = "mb-1.5 block text-caption font-medium text-ink";
 const submitCls =
-  "inline-flex min-h-[44px] items-center justify-center rounded-btn bg-pine px-6 py-2.5 text-[0.95rem] font-medium text-bone transition-colors hover:bg-pine-dark disabled:opacity-60";
+  "inline-flex min-h-[44px] items-center justify-center rounded-btn bg-brass px-6 py-2.5 text-[0.95rem] font-medium text-white transition-colors hover:bg-brass-dark disabled:opacity-60";
 
 function TagsInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   return (
@@ -239,7 +239,7 @@ function FilesForm({ pending, onSubmit }: { pending: boolean; onSubmit: (fd: For
           multiple
           accept={FILE_ACCEPT}
           onChange={(e) => setFiles(Array.from(e.target.files ?? []))}
-          className="block w-full text-[0.9rem] text-slate file:ml-3 file:rounded-btn file:border-0 file:bg-sand file:px-4 file:py-2 file:text-pine"
+          className="block w-full text-[0.9rem] text-slate file:ml-3 file:rounded-btn file:border-0 file:bg-sand file:px-4 file:py-2 file:text-ink"
         />
         {files.length > 0 && (
           <p className="mt-1.5 text-[0.8rem] text-slate">{toFa(files.length)} فایل انتخاب شد.</p>
@@ -280,8 +280,8 @@ function TestSearch() {
   }
 
   return (
-    <section className="rounded-card border border-sand bg-white p-6 shadow-soft">
-      <h2 className="mb-4 font-heading text-body font-semibold text-pine">جست‌وجوی آزمایشی</h2>
+    <section className="rounded-card border border-sand bg-pine p-6 shadow-soft">
+      <h2 className="mb-4 font-heading text-body font-semibold text-ink">جست‌وجوی آزمایشی</h2>
       <div className="flex gap-2">
         <input
           value={q}
@@ -294,16 +294,16 @@ function TestSearch() {
           {pending ? "…" : "جست‌وجو"}
         </button>
       </div>
-      {err && <p className="mt-3 text-caption text-red-600">{err}</p>}
+      {err && <p className="mt-3 text-caption text-red-400">{err}</p>}
       {results && (
         <div className="mt-4 space-y-2">
           {results.length === 0 ? (
             <p className="text-caption text-slate">نتیجه‌ای بالای آستانه‌ی شباهت یافت نشد.</p>
           ) : (
             results.map((c) => (
-              <div key={c.id} className="rounded-btn border border-sand bg-bone px-4 py-3">
+              <div key={c.id} className="rounded-btn border border-sand bg-bone/60 px-4 py-3">
                 <div className="mb-1 flex items-center justify-between text-[0.75rem] text-slate">
-                  <span className="font-medium text-pine">{c.title}</span>
+                  <span className="font-medium text-ink">{c.title}</span>
                   <span>شباهت: {toFa(Math.round(c.similarity * 100))}٪</span>
                 </div>
                 <p className="text-[0.85rem] leading-7 text-ink">{c.content.slice(0, 220)}…</p>

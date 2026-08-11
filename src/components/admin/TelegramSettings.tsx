@@ -51,25 +51,25 @@ export default function TelegramSettings({ userCount }: { userCount: number }) {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-heading text-h3 font-bold text-pine">کانال تلگرام</h1>
+        <h1 className="font-heading text-h3 font-bold text-ink">کانال تلگرام</h1>
         <p className="mt-1 text-caption text-slate">
           چت‌بات کوشش‌گران قرن روی تلگرام، با همان مغز RAG و پایگاه دانش مشترک.
         </p>
       </div>
 
       {msg && (
-        <div className={`rounded-btn px-4 py-2.5 text-caption ${msg.ok ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"}`}>
+        <div className={`rounded-btn px-4 py-2.5 text-caption ${msg.ok ? "bg-green-500/10 text-green-300" : "bg-red-500/10 text-red-300"}`}>
           {msg.text}
         </div>
       )}
 
       {/* وضعیت */}
-      <section className="rounded-card border border-sand bg-white p-6 shadow-soft">
-        <h2 className="mb-4 font-heading text-body font-semibold text-pine">وضعیت بات</h2>
+      <section className="rounded-card border border-sand bg-pine p-6 shadow-soft">
+        <h2 className="mb-4 font-heading text-body font-semibold text-ink">وضعیت بات</h2>
         {loading ? (
           <p className="text-caption text-slate">در حال بررسی…</p>
         ) : !status?.configured ? (
-          <p className="rounded-btn bg-red-50 px-4 py-3 text-caption text-red-700">
+          <p className="rounded-btn bg-red-500/10 px-4 py-3 text-caption text-red-300">
             توکن تلگرام (TELEGRAM_BOT_TOKEN) تنظیم نشده است.
           </p>
         ) : (
@@ -78,7 +78,7 @@ export default function TelegramSettings({ userCount }: { userCount: number }) {
             <Row
               label="وضعیت Webhook"
               value={webhookActive ? "فعال ✅" : "غیرفعال"}
-              valueClass={webhookActive ? "text-green-700" : "text-slate"}
+              valueClass={webhookActive ? "text-green-400" : "text-slate"}
             />
             {webhookActive && <Row label="آدرس Webhook" value={status.webhookUrl!} ltr />}
             <Row label="پیام‌های در صف" value={toFa(status.pending ?? 0)} />
@@ -92,7 +92,7 @@ export default function TelegramSettings({ userCount }: { userCount: number }) {
               type="button"
               disabled={pending}
               onClick={() => run(setTelegramWebhookAction())}
-              className="rounded-btn bg-pine px-5 py-2.5 text-caption font-medium text-bone transition-colors hover:bg-pine-dark disabled:opacity-60"
+              className="rounded-btn bg-brass px-5 py-2.5 text-caption font-medium text-white transition-colors hover:bg-brass-dark disabled:opacity-60"
             >
               {webhookActive ? "تنظیم دوباره‌ی Webhook" : "فعال‌سازی Webhook"}
             </button>
@@ -101,7 +101,7 @@ export default function TelegramSettings({ userCount }: { userCount: number }) {
                 type="button"
                 disabled={pending}
                 onClick={() => run(deleteTelegramWebhookAction())}
-                className="rounded-btn border border-red-200 px-5 py-2.5 text-caption text-red-600 transition-colors hover:bg-red-50 disabled:opacity-60"
+                className="rounded-btn border border-red-500/30 px-5 py-2.5 text-caption text-red-400 transition-colors hover:bg-red-500/10 disabled:opacity-60"
               >
                 حذف Webhook
               </button>
@@ -109,7 +109,7 @@ export default function TelegramSettings({ userCount }: { userCount: number }) {
             <button
               type="button"
               onClick={refresh}
-              className="rounded-btn border border-pine/25 px-5 py-2.5 text-caption text-pine transition-colors hover:bg-pine/5"
+              className="rounded-btn border border-sand px-5 py-2.5 text-caption text-ink transition-colors hover:border-brass hover:bg-white/5"
             >
               تازه‌سازی
             </button>
@@ -129,13 +129,13 @@ export default function TelegramSettings({ userCount }: { userCount: number }) {
       </section>
 
       {/* پیام انبوه */}
-      <section className="rounded-card border border-sand bg-white p-6 shadow-soft">
-        <h2 className="mb-4 font-heading text-body font-semibold text-pine">پیام انبوه (Broadcast)</h2>
+      <section className="rounded-card border border-sand bg-pine p-6 shadow-soft">
+        <h2 className="mb-4 font-heading text-body font-semibold text-ink">پیام انبوه (Broadcast)</h2>
         <textarea
           value={broadcast}
           onChange={(e) => setBroadcast(e.target.value)}
           rows={4}
-          className="w-full rounded-btn border border-slate/30 bg-white px-3.5 py-2.5 text-[0.95rem] leading-7 text-ink focus:border-brass focus:outline-none"
+          className="w-full rounded-btn border border-sand bg-bone px-3.5 py-2.5 text-[0.95rem] leading-7 text-ink focus:border-brass focus:outline-none"
           placeholder="پیامی که می‌خواهید برای همه‌ی کاربران تلگرام ارسال شود…"
         />
         <div className="mt-4 flex items-center gap-3">
@@ -145,7 +145,7 @@ export default function TelegramSettings({ userCount }: { userCount: number }) {
             onClick={() => {
               if (confirm(`ارسال این پیام به ${toFa(userCount)} کاربر تلگرام؟`)) run(broadcastTelegramAction(broadcast));
             }}
-            className="rounded-btn bg-pine px-5 py-2.5 text-caption font-medium text-bone transition-colors hover:bg-pine-dark disabled:opacity-60"
+            className="rounded-btn bg-brass px-5 py-2.5 text-caption font-medium text-white transition-colors hover:bg-brass-dark disabled:opacity-60"
           >
             {pending ? "در حال ارسال…" : "ارسال به همه"}
           </button>

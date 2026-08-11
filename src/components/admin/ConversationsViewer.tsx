@@ -50,25 +50,25 @@ export default function ConversationsViewer({
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-heading text-h3 font-bold text-pine">گفتگوها</h1>
+        <h1 className="font-heading text-h3 font-bold text-ink">گفتگوها</h1>
         <p className="mt-1 text-caption text-slate">مجموعاً {toFa(conversations.length)} گفتگوی اخیر. روی هر کدام بزنید تا پیام‌ها و منابع بازیابی‌شده را ببینید.</p>
       </div>
 
-      {error && <div className="rounded-card border border-red-200 bg-red-50 px-5 py-4 text-body text-red-700">{error}</div>}
+      {error && <div className="rounded-card border border-red-500/30 bg-red-500/10 px-5 py-4 text-body text-red-300">{error}</div>}
 
       {conversations.length === 0 ? (
-        <div className="rounded-card border border-dashed border-sand bg-white px-5 py-12 text-center text-slate">هنوز گفتگویی ثبت نشده است.</div>
+        <div className="rounded-card border border-dashed border-sand bg-pine px-5 py-12 text-center text-slate">هنوز گفتگویی ثبت نشده است.</div>
       ) : (
         <div className="space-y-3">
           {conversations.map((c) => (
-            <div key={c.id} className="overflow-hidden rounded-card border border-sand bg-white shadow-soft">
+            <div key={c.id} className="overflow-hidden rounded-card border border-sand bg-pine shadow-soft">
               <button
                 type="button"
                 onClick={() => toggle(c.id)}
-                className="flex w-full items-center justify-between gap-3 px-5 py-4 text-right transition-colors hover:bg-bone/60"
+                className="flex w-full items-center justify-between gap-3 px-5 py-4 text-right transition-colors hover:bg-white/5"
               >
                 <span className="flex items-center gap-3">
-                  <span className="rounded-full bg-sand px-2.5 py-0.5 text-[0.75rem] text-pine">
+                  <span className="rounded-full bg-sand px-2.5 py-0.5 text-[0.75rem] text-brass">
                     {CHANNEL_LABEL[c.channel] ?? c.channel}
                   </span>
                   <span className="text-caption text-slate">{fmt(c.last_at)}</span>
@@ -77,7 +77,7 @@ export default function ConversationsViewer({
               </button>
 
               {openId === c.id && (
-                <div className="border-t border-sand bg-bone/40 px-5 py-4">
+                <div className="border-t border-sand bg-black/20 px-5 py-4">
                   {!detail[c.id] ? (
                     <p className="text-caption text-slate">{pending ? "در حال بارگذاری…" : "—"}</p>
                   ) : detail[c.id].length === 0 ? (
@@ -107,8 +107,8 @@ function MessageRow({ m }: { m: ConvMessage }) {
         <div
           className={
             isUser
-              ? "rounded-card rounded-tr-sm bg-pine px-4 py-2.5 text-[0.9rem] leading-7 text-bone"
-              : "rounded-card rounded-tl-sm border border-sand bg-white px-4 py-2.5 text-[0.9rem] leading-7 text-ink"
+              ? "rounded-card rounded-tr-sm bg-brass px-4 py-2.5 text-[0.9rem] leading-7 text-white"
+              : "rounded-card rounded-tl-sm border border-sand bg-pine px-4 py-2.5 text-[0.9rem] leading-7 text-ink"
           }
         >
           <p className="whitespace-pre-wrap">{m.content}</p>
@@ -124,8 +124,8 @@ function MessageRow({ m }: { m: ConvMessage }) {
           <div className="mt-2 space-y-1.5">
             <p className="px-1 text-[0.7rem] font-medium text-brass">منابع بازیابی‌شده:</p>
             {m.retrieved.map((r, i) => (
-              <div key={i} className="rounded-btn border border-sand bg-bone px-3 py-2 text-[0.78rem] leading-6 text-slate">
-                <b className="text-pine">{r.title}:</b> {r.content}…
+              <div key={i} className="rounded-btn border border-sand bg-pine px-3 py-2 text-[0.78rem] leading-6 text-slate">
+                <b className="text-ink">{r.title}:</b> {r.content}…
               </div>
             ))}
           </div>

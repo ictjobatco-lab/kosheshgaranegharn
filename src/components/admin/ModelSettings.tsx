@@ -27,15 +27,15 @@ const MODEL_GROUPS: { provider: string; models: { slug: string; label: string }[
 
 const labelCls = "mb-1.5 block text-caption font-medium text-ink";
 const inputCls =
-  "w-full min-h-[44px] rounded-btn border border-slate/30 bg-white px-3.5 py-2.5 text-[0.95rem] text-ink focus:border-brass focus:outline-none";
+  "w-full min-h-[44px] rounded-btn border border-sand bg-bone px-3.5 py-2.5 text-[0.95rem] text-ink focus:border-brass focus:outline-none";
 const saveCls =
-  "inline-flex min-h-[44px] items-center justify-center rounded-btn bg-pine px-6 py-2.5 text-[0.95rem] font-medium text-bone transition-colors hover:bg-pine-dark disabled:opacity-60";
+  "inline-flex min-h-[44px] items-center justify-center rounded-btn bg-brass px-6 py-2.5 text-[0.95rem] font-medium text-white transition-colors hover:bg-brass-dark disabled:opacity-60";
 
 export default function ModelSettings({ model, embedding }: { model: ModelConfig; embedding: EmbeddingConfig }) {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-heading text-h3 font-bold text-pine">مدل‌ها و بازیابی</h1>
+        <h1 className="font-heading text-h3 font-bold text-ink">مدل‌ها و بازیابی</h1>
         <p className="mt-1 text-caption text-slate">همه‌ی مدل‌های تولید پاسخ از طریق OpenRouter فراخوانی می‌شوند؛ تعویض مدل فقط تغییر یک گزینه است.</p>
       </div>
       <ModelForm model={model} />
@@ -71,8 +71,8 @@ function ModelForm({ model }: { model: ModelConfig }) {
   }
 
   return (
-    <section className="rounded-card border border-sand bg-white p-6 shadow-soft">
-      <h2 className="mb-4 font-heading text-body font-semibold text-pine">مدل تولید پاسخ</h2>
+    <section className="rounded-card border border-sand bg-pine p-6 shadow-soft">
+      <h2 className="mb-4 font-heading text-body font-semibold text-ink">مدل تولید پاسخ</h2>
       <div className="grid gap-5 sm:grid-cols-2">
         <div className="sm:col-span-2">
           <label className={labelCls}>مدل فعال</label>
@@ -104,7 +104,7 @@ function ModelForm({ model }: { model: ModelConfig }) {
         </div>
         <div>
           <label className={labelCls}>Temperature ({temperature})</label>
-          <input type="range" min={0} max={1} step={0.1} value={temperature} onChange={(e) => setTemperature(Number(e.target.value))} className="w-full accent-pine" />
+          <input type="range" min={0} max={1} step={0.1} value={temperature} onChange={(e) => setTemperature(Number(e.target.value))} className="w-full accent-brass" />
         </div>
         <div>
           <label className={labelCls}>حداکثر توکن پاسخ</label>
@@ -112,14 +112,14 @@ function ModelForm({ model }: { model: ModelConfig }) {
         </div>
         <div>
           <label className={labelCls}>top_p ({topP})</label>
-          <input type="range" min={0.1} max={1} step={0.05} value={topP} onChange={(e) => setTopP(Number(e.target.value))} className="w-full accent-pine" />
+          <input type="range" min={0.1} max={1} step={0.05} value={topP} onChange={(e) => setTopP(Number(e.target.value))} className="w-full accent-brass" />
         </div>
       </div>
       <div className="mt-5 flex items-center gap-3">
         <button type="button" disabled={pending} onClick={save} className={saveCls}>
           {pending ? "در حال ذخیره…" : "ذخیره‌ی تنظیمات مدل"}
         </button>
-        {msg && <span className={`text-caption ${msg.ok ? "text-green-700" : "text-red-600"}`}>{msg.text}</span>}
+        {msg && <span className={`text-caption ${msg.ok ? "text-green-400" : "text-red-400"}`}>{msg.text}</span>}
       </div>
     </section>
   );
@@ -146,10 +146,10 @@ function EmbeddingForm({ embedding }: { embedding: EmbeddingConfig }) {
   }
 
   return (
-    <section className="rounded-card border border-sand bg-white p-6 shadow-soft">
-      <h2 className="mb-2 font-heading text-body font-semibold text-pine">Embedding و بازیابی</h2>
+    <section className="rounded-card border border-sand bg-pine p-6 shadow-soft">
+      <h2 className="mb-2 font-heading text-body font-semibold text-ink">Embedding و بازیابی</h2>
       <div className="mb-4 rounded-btn bg-sand/60 px-4 py-3 text-[0.85rem] leading-7 text-slate">
-        مدل embedding فعلی: <b className="text-pine">{embedding.provider} / {embedding.model}</b> ({embedding.dimensions} بُعد).
+        مدل embedding فعلی: <b className="text-ink">{embedding.provider} / {embedding.model}</b> ({embedding.dimensions} بُعد).
         تغییر مدل embedding یا ابعاد، نیاز به <b>بازسازی کامل ایندکس</b> دارد و در نسخه‌ی بعدی پنل فعال می‌شود.
       </div>
       <div className="grid gap-5 sm:grid-cols-2">
@@ -167,14 +167,14 @@ function EmbeddingForm({ embedding }: { embedding: EmbeddingConfig }) {
         </div>
         <div>
           <label className={labelCls}>آستانه‌ی شباهت ({threshold})</label>
-          <input type="range" min={0} max={0.9} step={0.05} value={threshold} onChange={(e) => setThreshold(Number(e.target.value))} className="w-full accent-pine" />
+          <input type="range" min={0} max={0.9} step={0.05} value={threshold} onChange={(e) => setThreshold(Number(e.target.value))} className="w-full accent-brass" />
         </div>
       </div>
       <div className="mt-5 flex items-center gap-3">
         <button type="button" disabled={pending} onClick={save} className={saveCls}>
           {pending ? "در حال ذخیره…" : "ذخیره‌ی تنظیمات بازیابی"}
         </button>
-        {msg && <span className={`text-caption ${msg.ok ? "text-green-700" : "text-red-600"}`}>{msg.text}</span>}
+        {msg && <span className={`text-caption ${msg.ok ? "text-green-400" : "text-red-400"}`}>{msg.text}</span>}
       </div>
     </section>
   );
