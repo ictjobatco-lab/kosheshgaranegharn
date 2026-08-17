@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { isAuthed } from "@/lib/auth";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import {
@@ -255,11 +256,22 @@ export async function playgroundAction(
 }
 
 // ── تلگرام ───────────────────────────────────────────────────────
-// آدرس عمومی سایت برای ست‌کردن webhook — از env خونده می‌شود تا مخصوص هیچ
-// دامنه‌ی خاصی هاردکد نباشد (روی هر دامنه‌ای دیپلوی کنید کار می‌کند).
-function getSiteUrl(): string | null {
+// آدرس عمومی سایت برای ست‌کردن webhook — در درجه‌ی اول از روی خودِ درخواست
+// فعلی (host header) ساخته می‌شود تا جای غلط تایپی/فراموشیِ env var نمونه.
+// NEXT_PUBLIC_SITE_URL و VERCEL_URL فقط به‌عنوان جایگزین نگه داشته شدند.
+async function getSiteUrl(): Promise<string | null> {
+  try {
+    const h = await headers();
+    const host = h.get("x-forwarded-host") ?? h.get("host");
+    if (host && !host.startsWith("localhost")) {
+      const proto = h.get("x-forwarded-proto") ?? "https";
+      return `${proto}://${host}`;
+    }
+  } catch {
+    // خارج از یک درخواست HTTP (مثلاً اسکریپت) — به env برمی‌گردیم
+  }
   const explicit = process.env.NEXT_PUBLIC_SITE_URL;
-  if (explicit) return explicit.replace(/\/+$/, "");
+  if (explicit) return explicit.trim().replace(/\/+$/, "");
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
   return null;
 }
@@ -294,7 +306,7 @@ export async function setTelegramWebhookAction(): Promise<ActionResult> {
   if (!guard()) return { ok: false, message: "دسترسی غیرمجاز." };
   const secret = process.env.TELEGRAM_WEBHOOK_SECRET;
   if (!secret) return { ok: false, message: "TELEGRAM_WEBHOOK_SECRET تنظیم نشده است." };
-  const siteUrl = getSiteUrl();
+  const siteUrl = await getSiteUrl();
   if (!siteUrl) {
     return {
       ok: false,

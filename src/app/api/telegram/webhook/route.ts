@@ -6,8 +6,14 @@ import { sendMessage, sendChatAction, answerCallbackQuery, type InlineButton } f
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
-// TODO: با دامنه‌ی واقعی دیپلوی‌شده جایگزین کنید
-const SITE_URL = "https://example.com";
+// آدرس عمومی سایت برای لینک‌های دکمه‌ها — از خودِ درخواست (که همیشه به
+// دامنه‌ی واقعیِ همین دیپلوی می‌رسد) ساخته می‌شود، هیچ دامنه‌ای هاردکد نیست.
+function siteUrlFromRequest(req: Request): string {
+  const h = req.headers;
+  const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
+  const proto = h.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
+  return `${proto}://${host}`;
+}
 
 // ── rate-limit ساده per chat ──
 const WINDOW_MS = 60_000;
@@ -28,19 +34,22 @@ const QUICK_QUESTIONS: Record<string, string> = {
   q_pricing: "هزینه و مدت پروژه‌های نرم‌افزاری چقدر است؟",
   q_process: "فرایند همکاری با کوشش‌گران قرن چطور پیش می‌رود؟",
 };
-function startKeyboard(): InlineButton[][] {
+function startKeyboard(siteUrl: string): InlineButton[][] {
   return [
     [{ text: "خدمات ما", callback_data: "q_services" }, { text: "چرا ما", callback_data: "q_pillars" }],
     [{ text: "قیمت‌ها", callback_data: "q_pricing" }, { text: "فرایند همکاری", callback_data: "q_process" }],
-    [{ text: "📝 ثبت درخواست مشاوره", url: `${SITE_URL}/#consultation` }],
+    [{ text: "📝 ثبت درخواست مشاوره", url: `${siteUrl}/#consultation` }],
   ];
 }
 
 const WELCOME =
   "سلام! 👋 من دستیار هوشمند کوشش‌گران قرن هستم؛ خدمات برنامه‌نویسی، هوش مصنوعی و فناوری اطلاعات.\n\nسؤال‌تان را درباره‌ی خدمات، قیمت‌ها یا فرایند همکاری بنویسید — یا یکی از گزینه‌های زیر را انتخاب کنید.";
-const HELP =
-  "من می‌توانم درباره‌ی کوشش‌گران قرن به شما کمک کنم:\n\n• سؤال‌تان را مستقیم بنویسید.\n• /start — شروع دوباره و منوی گزینه‌ها\n• /reset — پاک‌کردن حافظه‌ی گفتگو و شروع تازه\n\nهر وقت آماده بودید، درخواست مشاوره‌ی رایگان ثبت کنید: " +
-  `${SITE_URL}/#consultation`;
+function helpText(siteUrl: string): string {
+  return (
+    "من می‌توانم درباره‌ی کوشش‌گران قرن به شما کمک کنم:\n\n• سؤال‌تان را مستقیم بنویسید.\n• /start — شروع دوباره و منوی گزینه‌ها\n• /reset — پاک‌کردن حافظه‌ی گفتگو و شروع تازه\n\nهر وقت آماده بودید، درخواست مشاوره‌ی رایگان ثبت کنید: " +
+    `${siteUrl}/#consultation`
+  );
+}
 
 export async function POST(req: Request) {
   // امنیت: تأیید secret تلگرام
@@ -56,11 +65,13 @@ export async function POST(req: Request) {
     return new Response("ok"); // به‌روزرسانی نامعتبر را بی‌صدا رد کن
   }
 
+  const siteUrl = siteUrlFromRequest(req);
+
   try {
     if (update.callback_query) {
-      await handleCallback(update.callback_query);
+      await handleCallback(update.callback_query, siteUrl);
     } else if (update.message) {
-      await handleMessage(update.message);
+      await handleMessage(update.message, siteUrl);
     }
   } catch (e) {
     console.error("[telegram] خطا:", (e as Error).message);
@@ -69,7 +80,7 @@ export async function POST(req: Request) {
   return new Response("ok");
 }
 
-async function handleMessage(msg: TelegramMessage) {
+async function handleMessage(msg: TelegramMessage, siteUrl: string) {
   const chatId = msg.chat.id;
   const text = (msg.text ?? "").trim();
   const supabase = getSupabaseAdmin();
@@ -85,16 +96,16 @@ async function handleMessage(msg: TelegramMessage) {
       await upsertUser(supabase, chatId, msg.from);
       await resetConversation(supabase, chatId);
     }
-    await sendMessage(chatId, WELCOME, startKeyboard());
+    await sendMessage(chatId, WELCOME, startKeyboard(siteUrl));
     return;
   }
   if (text.startsWith("/help")) {
-    await sendMessage(chatId, HELP);
+    await sendMessage(chatId, helpText(siteUrl));
     return;
   }
   if (text.startsWith("/reset")) {
     if (supabase) await resetConversation(supabase, chatId);
-    await sendMessage(chatId, "حافظه‌ی گفتگو پاک شد. می‌توانید از نو شروع کنید 🙂", startKeyboard());
+    await sendMessage(chatId, "حافظه‌ی گفتگو پاک شد. می‌توانید از نو شروع کنید 🙂", startKeyboard(siteUrl));
     return;
   }
 
@@ -103,10 +114,10 @@ async function handleMessage(msg: TelegramMessage) {
     return;
   }
 
-  await answerQuestion(chatId, text, msg.from);
+  await answerQuestion(chatId, text, siteUrl, msg.from);
 }
 
-async function handleCallback(cb: TelegramCallback) {
+async function handleCallback(cb: TelegramCallback, siteUrl: string) {
   await answerCallbackQuery(cb.id).catch(() => {});
   const chatId = cb.message?.chat.id;
   if (!chatId) return;
@@ -116,10 +127,10 @@ async function handleCallback(cb: TelegramCallback) {
     await sendMessage(chatId, "کمی آرام‌تر 🙏 لطفاً چند لحظه صبر کنید.");
     return;
   }
-  await answerQuestion(chatId, question, cb.from);
+  await answerQuestion(chatId, question, siteUrl, cb.from);
 }
 
-async function answerQuestion(chatId: number, question: string, from?: TelegramUser) {
+async function answerQuestion(chatId: number, question: string, siteUrl: string, from?: TelegramUser) {
   const supabase = getSupabaseAdmin();
   await sendChatAction(chatId, "typing").catch(() => {});
 
@@ -136,7 +147,7 @@ async function answerQuestion(chatId: number, question: string, from?: TelegramU
     userMessage: question,
   });
 
-  await sendMessage(chatId, text, [[{ text: "📝 ثبت درخواست مشاوره", url: `${SITE_URL}/#consultation` }]]);
+  await sendMessage(chatId, text, [[{ text: "📝 ثبت درخواست مشاوره", url: `${siteUrl}/#consultation` }]]);
 }
 
 // ── نگاشت کاربر و گفتگو ──────────────────────────────────────────
