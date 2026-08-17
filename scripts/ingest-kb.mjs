@@ -185,6 +185,10 @@ async function main() {
       const vectors = [];
       for (let i = 0; i < chunks.length; i += 90) vectors.push(...(await embed(chunks.slice(i, i + 90))));
 
+      // idempotent: اگه قبلاً همین سند (با همین عنوان) ایندکس شده، اول حذفش کن
+      // تا اجرای دوباره‌ی اسکریپت رکورد تکراری نسازه.
+      await supabase.from("documents").delete().eq("title", d.title);
+
       const { data: doc, error: de } = await supabase
         .from("documents")
         .insert({ title: d.title, source_type: d.format, status: "processing", tags: d.topic ? [d.topic] : null })

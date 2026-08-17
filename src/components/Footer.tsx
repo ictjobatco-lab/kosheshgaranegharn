@@ -1,6 +1,6 @@
 import Logo from "./ui/Logo";
 import Container from "./ui/Container";
-import { IconMail, IconPhone, IconPin } from "./ui/icons";
+import { IconMail, IconPhone, IconPin, IconTelegram } from "./ui/icons";
 import { toFa } from "@/lib/utils";
 
 const NAV_LINKS = [
@@ -73,6 +73,17 @@ export default function Footer() {
               <li className="flex items-center gap-3">
                 <IconPin width={20} height={20} className="shrink-0 text-brass" />
                 <span>اصفهان، ایران</span>
+              </li>
+              <li>
+                <a
+                  href="https://t.me/Koushesh_bot"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 transition-colors hover:text-brass"
+                >
+                  <IconTelegram width={20} height={20} className="shrink-0 text-brass" />
+                  <span>گفت‌وگو با دستیار در تلگرام</span>
+                </a>
               </li>
             </ul>
           </div>

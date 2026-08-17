@@ -187,6 +187,15 @@ export function IconPin(props: IconProps) {
   );
 }
 
+export function IconTelegram(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="M21 4L3 11.5l6 2M21 4l-3.5 16-8.5-6.5M21 4L9 14.5" />
+      <path d="M9 14.5V19l3-3" />
+    </Base>
+  );
+}
+
 export function IconQuote(props: IconProps) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width={24} height={24} {...props}>
