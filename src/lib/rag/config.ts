@@ -29,8 +29,8 @@ export type ModelConfig = {
 };
 
 export const DEFAULT_EMBEDDING_CONFIG: EmbeddingConfig = {
-  provider: "cohere",
-  model: "embed-multilingual-v3.0",
+  provider: "openrouter",
+  model: "openai/text-embedding-3-small",
   dimensions: 1024,
   chunk_size: 500,
   chunk_overlap: 50,

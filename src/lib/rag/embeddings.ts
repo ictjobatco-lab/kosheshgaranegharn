@@ -3,7 +3,8 @@ import type { EmbeddingConfig } from "./config";
 
 /**
  * تبدیل متن به بردار (embedding) — provider-agnostic.
- * در Milestone 1 فقط Cohere پیاده شده؛ ساختار برای افزودن OpenAI/Google/Voyage آماده است.
+ * پیش‌فرض: OpenRouter (همان کلید چت‌بات، بدون نیاز به سرویس جدا مثل Cohere).
+ * Cohere هم برای سازگاری با نصب‌های قدیمی نگه داشته شده.
  *
  * inputType:
  *   - 'query'    → برای embed کردن سؤال کاربر هنگام جست‌وجو
@@ -21,11 +22,50 @@ export async function embed(
   switch (config.provider) {
     case "cohere":
       return embedCohere(texts, inputType, config);
+    case "openrouter":
+      return embedOpenRouter(texts, config);
     default:
       throw new Error(
         `ارائه‌دهنده‌ی embedding پشتیبانی‌نشده در این نسخه: ${config.provider}`
       );
   }
+}
+
+async function embedOpenRouter(
+  texts: string[],
+  config: EmbeddingConfig
+): Promise<number[][]> {
+  const apiKey = process.env.OPENROUTER_API_KEY;
+  if (!apiKey) {
+    throw new Error(
+      "کلید OPENROUTER_API_KEY تنظیم نشده است؛ امکان ساخت embedding وجود ندارد."
+    );
+  }
+
+  const res = await fetch("https://openrouter.ai/api/v1/embeddings", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: config.model,
+      input: texts,
+      dimensions: config.dimensions,
+    }),
+  });
+
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    throw new Error(`خطای OpenRouter embeddings (${res.status}): ${body.slice(0, 300)}`);
+  }
+
+  const json = await res.json();
+  const vectors: number[][] | undefined = json?.data?.map((d: { embedding: number[] }) => d.embedding);
+  if (!vectors || !Array.isArray(vectors)) {
+    throw new Error("پاسخ OpenRouter فاقد بردارهای معتبر بود.");
+  }
+  return vectors;
 }
 
 async function embedCohere(

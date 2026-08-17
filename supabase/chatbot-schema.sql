@@ -25,7 +25,7 @@ create table if not exists public.chunks (
   id          uuid primary key default gen_random_uuid(),
   document_id uuid not null references public.documents(id) on delete cascade,
   content     text not null,
-  embedding   vector(1024),                       -- Cohere embed-multilingual-v3.0
+  embedding   vector(1024),                       -- OpenRouter openai/text-embedding-3-small (dimensions=1024)
   token_count int,
   chunk_index int  not null,
   metadata    jsonb,
@@ -89,8 +89,8 @@ create table if not exists public.model_config (
 -- ── پیکربندی Embedding و retrieval ──────────────────────────────
 create table if not exists public.embedding_config (
   id                   uuid primary key default gen_random_uuid(),
-  provider             text not null default 'cohere',
-  model                text not null default 'embed-multilingual-v3.0',
+  provider             text not null default 'openrouter',
+  model                text not null default 'openai/text-embedding-3-small',
   dimensions           int  not null default 1024,
   chunk_size           int  not null default 500,
   chunk_overlap        int  not null default 50,
@@ -177,7 +177,7 @@ $$;
 
 -- ── ردیف‌های پیش‌فرض (Seed) — فقط اگر خالی باشند ────────────────
 insert into public.embedding_config (provider, model, dimensions)
-select 'cohere', 'embed-multilingual-v3.0', 1024
+select 'openrouter', 'openai/text-embedding-3-small', 1024
 where not exists (select 1 from public.embedding_config);
 
 insert into public.model_config (channel, active_model, fallback_model)

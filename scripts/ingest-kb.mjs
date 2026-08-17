@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
- * بارگذاری انبوه پایگاه دانش آرکان در سیستم RAG (Supabase + pgvector).
+ * بارگذاری انبوه پایگاه دانش کوشش‌گران قرن در سیستم RAG (Supabase + pgvector).
  *
  * این اسکریپت بر اساس knowledge-base/manifest.json هر سند را با عنوان فارسی و
- * تگ موضوعی‌اش می‌خواند، متن را بر اساس فرمت استخراج می‌کند، قطعه‌بندی و با Cohere
- * embed می‌کند و در جداول documents/chunks می‌نویسد.
+ * تگ موضوعی‌اش می‌خواند، متن را بر اساس فرمت استخراج می‌کند، قطعه‌بندی و از طریق
+ * OpenRouter (همان کلید چت‌بات) embed می‌کند و در جداول documents/chunks می‌نویسد.
  *
  * اجرا (از ریشه‌ی پروژه):  node scripts/ingest-kb.mjs
  * متغیرها از .env.local خوانده می‌شوند: NEXT_PUBLIC_SUPABASE_URL,
- * SUPABASE_SERVICE_ROLE_KEY, COHERE_API_KEY, EMBEDDING_MODEL.
+ * SUPABASE_SERVICE_ROLE_KEY, OPENROUTER_API_KEY, EMBEDDING_MODEL.
  *
  * نکته: نسخه‌های تکراریِ صرفاً فرمتی (docx معادل md، و pdf معادل html بروشور) رد
  * می‌شوند تا قطعه‌های تکراری وارد سیستم نشوند.
@@ -36,11 +36,12 @@ function loadEnv() {
 const env = loadEnv();
 const SUPABASE_URL = env.NEXT_PUBLIC_SUPABASE_URL;
 const SERVICE_KEY = env.SUPABASE_SERVICE_ROLE_KEY;
-const COHERE_API_KEY = env.COHERE_API_KEY;
-const EMBEDDING_MODEL = env.EMBEDDING_MODEL || "embed-multilingual-v3.0";
+const OPENROUTER_API_KEY = env.OPENROUTER_API_KEY;
+const EMBEDDING_MODEL = env.EMBEDDING_MODEL || "openai/text-embedding-3-small";
+const EMBEDDING_DIMENSIONS = Number(env.EMBEDDING_DIMENSIONS || 1024);
 
 if (!SUPABASE_URL || !SERVICE_KEY) throw new Error("متغیرهای Supabase در .env.local نیست.");
-if (!COHERE_API_KEY) throw new Error("COHERE_API_KEY در .env.local نیست.");
+if (!OPENROUTER_API_KEY) throw new Error("OPENROUTER_API_KEY در .env.local نیست.");
 
 const supabase = createClient(SUPABASE_URL, SERVICE_KEY, {
   auth: { persistSession: false, autoRefreshToken: false },
@@ -147,16 +148,16 @@ function splitText(raw, chunkSizeTokens = 500, overlapTokens = 50) {
   return chunks;
 }
 
-// ── embedding با Cohere ──
+// ── embedding با OpenRouter ──
 async function embed(texts) {
-  const res = await fetch("https://api.cohere.com/v2/embed", {
+  const res = await fetch("https://openrouter.ai/api/v1/embeddings", {
     method: "POST",
-    headers: { Authorization: `Bearer ${COHERE_API_KEY}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ model: EMBEDDING_MODEL, texts, input_type: "search_document", embedding_types: ["float"] }),
+    headers: { Authorization: `Bearer ${OPENROUTER_API_KEY}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ model: EMBEDDING_MODEL, input: texts, dimensions: EMBEDDING_DIMENSIONS }),
   });
   const j = await res.json();
-  if (!res.ok) throw new Error(`Cohere ${res.status}: ${JSON.stringify(j).slice(0, 200)}`);
-  return j.embeddings.float;
+  if (!res.ok) throw new Error(`OpenRouter ${res.status}: ${JSON.stringify(j).slice(0, 200)}`);
+  return j.data.map((d) => d.embedding);
 }
 
 // ── اجرا ──

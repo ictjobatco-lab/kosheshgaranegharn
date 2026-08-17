@@ -255,7 +255,14 @@ export async function playgroundAction(
 }
 
 // ── تلگرام ───────────────────────────────────────────────────────
-const SITE_URL = "https://arkan-website-chatbot.vercel.app";
+// آدرس عمومی سایت برای ست‌کردن webhook — از env خونده می‌شود تا مخصوص هیچ
+// دامنه‌ی خاصی هاردکد نباشد (روی هر دامنه‌ای دیپلوی کنید کار می‌کند).
+function getSiteUrl(): string | null {
+  const explicit = process.env.NEXT_PUBLIC_SITE_URL;
+  if (explicit) return explicit.replace(/\/+$/, "");
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  return null;
+}
 
 export async function getTelegramStatusAction(): Promise<{
   ok: boolean;
@@ -287,9 +294,16 @@ export async function setTelegramWebhookAction(): Promise<ActionResult> {
   if (!guard()) return { ok: false, message: "دسترسی غیرمجاز." };
   const secret = process.env.TELEGRAM_WEBHOOK_SECRET;
   if (!secret) return { ok: false, message: "TELEGRAM_WEBHOOK_SECRET تنظیم نشده است." };
+  const siteUrl = getSiteUrl();
+  if (!siteUrl) {
+    return {
+      ok: false,
+      message: "NEXT_PUBLIC_SITE_URL تنظیم نشده است؛ آدرس عمومی سایت را در .env.local (یا env دیپلوی) مشخص کنید.",
+    };
+  }
   const { setWebhook } = await import("@/lib/telegram");
   try {
-    const res = (await setWebhook(`${SITE_URL}/api/telegram/webhook`, secret)) as { ok: boolean; description?: string };
+    const res = (await setWebhook(`${siteUrl}/api/telegram/webhook`, secret)) as { ok: boolean; description?: string };
     return res.ok
       ? { ok: true, message: "Webhook با موفقیت تنظیم شد." }
       : { ok: false, message: res.description ?? "تنظیم webhook ناموفق بود." };

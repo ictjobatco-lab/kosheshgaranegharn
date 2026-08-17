@@ -4,8 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { useArkanChat, type ChatMsg } from "@/lib/useArkanChat";
 import { renderBold } from "./format";
 
-const SITE_URL = "https://arkan-website-chatbot.vercel.app";
-
 export default function WidgetChat({
   welcomeMessage,
   primaryColor,
@@ -72,7 +70,7 @@ export default function WidgetChat({
       {/* CTA + ورودی */}
       <div className="border-t border-sand bg-bone px-3 pb-3 pt-2">
         <a
-          href={`${SITE_URL}/#consultation`}
+          href="/#consultation"
           target="_blank"
           rel="noopener noreferrer"
           className="mb-2 block rounded-btn py-2 text-center text-[0.8rem] font-medium text-white"
